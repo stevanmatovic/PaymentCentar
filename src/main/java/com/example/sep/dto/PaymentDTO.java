@@ -17,5 +17,9 @@ public class PaymentDTO {
   private String successURI;
 
   private String failureURI;
+  
+  private String priceCurrency;
+	
+  private String receiveCurrency;
 
 }
