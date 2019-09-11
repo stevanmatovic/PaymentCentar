@@ -31,8 +31,8 @@ public class BitcoinService {
 
 		headers.add("Authorization", "Token " + bitcoinToken);
 
-		String successURL = "http://localhost:8080/SuccessBitcoin.html?orderId=" + p.getId();
-		String cancelURL = "http://localhost:8080/CancelBitcoin.html?orderId=" + p.getId();
+		String successURL = "https://localhost:443/SuccessBitcoin.html?orderId=" + p.getId();
+		String cancelURL = "https://localhost:443/CancelBitcoin.html?orderId=" + p.getId();
 		MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
 
 		map.add("order_id", p.getId());

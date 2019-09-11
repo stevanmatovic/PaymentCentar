@@ -50,7 +50,6 @@ public class PaymentController {
         break;
       case "Bitcoin":
     	  result = bitcoinService.createPayment(p);
-    	  
     	  paymentService.save((Payment)result.get("payment"));
           return "redirect:" + result.get("redirect_url");
     }
@@ -65,6 +64,7 @@ public class PaymentController {
     String result = restTemplate.getForObject(p.getSuccessURI(), String.class);
     System.out.println(result);
   }
+  
 
   @GetMapping(value = "failure/{id}")
   public void failure(@PathVariable Long id){
