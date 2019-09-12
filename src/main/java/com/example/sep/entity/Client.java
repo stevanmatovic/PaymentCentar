@@ -25,6 +25,13 @@ public class Client {
   @Column(nullable = false, length = 50)
   private String title;
 
+  //PayPal fields
   @Column(nullable = true)
   private String merchantId;
+
+  @Column(nullable = true)
+  private String clientId;
+
+  @Column(nullable = true)
+  private String clientSecret;
 }

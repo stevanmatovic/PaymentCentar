@@ -51,8 +51,8 @@ public class PayPalService {
     payment.setTransactions(transactions);
 
     RedirectUrls redirectUrls = new RedirectUrls();
-    redirectUrls.setCancelUrl("http://localhost:8080/payment/failure/" + p.getId());
-    redirectUrls.setReturnUrl("http://localhost:8080/payment/success/" + p.getId());
+    redirectUrls.setCancelUrl("https://localhost:443/payment/failure/" + p.getId());
+    redirectUrls.setReturnUrl("https://localhost:443/payment/success/" + p.getId());
     payment.setRedirectUrls(redirectUrls);
     Payment createdPayment;
     try {
