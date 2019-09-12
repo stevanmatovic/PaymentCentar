@@ -18,6 +18,7 @@ import com.example.sep.entity.Client;
 import com.example.sep.entity.Payment;
 import com.example.sep.repository.ClientRepository;
 
+
 @Service
 public class BitcoinService {
 
@@ -55,7 +56,7 @@ public class BitcoinService {
 
 		ResponseEntity<OrderResponseDTO> response = client.postForEntity("https://api-sandbox.coingate.com/v2/orders",
 				request, OrderResponseDTO.class);
-		
+
 
 		result.put("status", "success");
 		result.put("redirect_url", response.getBody().getPaymentUrl());

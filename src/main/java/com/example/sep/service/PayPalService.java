@@ -1,7 +1,6 @@
 package com.example.sep.service;
 
 import com.example.sep.entity.Client;
-
 import com.example.sep.repository.ClientRepository;
 import com.paypal.api.payments.*;
 import com.paypal.base.rest.APIContext;
@@ -11,7 +10,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class PayPalService {
