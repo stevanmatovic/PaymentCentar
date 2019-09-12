@@ -44,7 +44,7 @@ public class PaymentController {
         break;
       case "Bitcoin":
         result = bitcoinService.createPayment(p);
-        //paymentService.save((Payment) result.get("payment"));
+        paymentService.save((Payment) result.get("payment"));
         return "redirect:" + result.get("redirect_url");
     }
     return "error";
