@@ -3,6 +3,9 @@ package com.example.sep.service;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.example.sep.entity.Client;
+import com.example.sep.repository.ClientRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -21,6 +24,9 @@ public class BitcoinService {
 	@Value("${bitcoinToken}")
 	private String bitcoinToken;
 
+	@Autowired
+	private ClientRepository clientRepository;
+
 	public Map<String, Object> createPayment(Payment p) {
 
 		Map<String, Object> result = new HashMap<String, Object>();
@@ -29,16 +35,18 @@ public class BitcoinService {
 		RestTemplate client = new RestTemplate();
 		HttpHeaders headers = new HttpHeaders();
 
+		Client c = clientRepository.findById(p.getClient().getId()).get();
+
 		headers.add("Authorization", "Token " + bitcoinToken);
 
-		String successURL = "https://localhost:443/SuccessBitcoin.html?orderId=" + p.getId();
-		String cancelURL = "https://localhost:443/CancelBitcoin.html?orderId=" + p.getId();
+		String successURL = "https://localhost:443/payment/success/" + p.getId();
+		String cancelURL = "https://localhost:443/payment/failure/" + p.getId();
 		MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
 
 		map.add("order_id", p.getId());
 		map.add("price_amount", p.getPrice());
-		map.add("price_currency", p.getPriceCurrency());
-		map.add("receive_currency", p.getReceiveCurrency());
+		map.add("price_currency", "USD");
+		map.add("receive_currency", "USD");
 		map.add("success_url", successURL);
 		map.add("cancel_url", cancelURL);
 
@@ -46,10 +54,7 @@ public class BitcoinService {
 
 		ResponseEntity<OrderResponseDTO> response = client.postForEntity("https://api-sandbox.coingate.com/v2/orders",
 				request, OrderResponseDTO.class);
-
-		p.setStatus(response.getBody().getStatus());
-		p.setSuccessURI(successURL);
-		p.setFailureURI(cancelURL);
+		
 
 		result.put("status", "success");
 		result.put("redirect_url", response.getBody().getPaymentUrl());
