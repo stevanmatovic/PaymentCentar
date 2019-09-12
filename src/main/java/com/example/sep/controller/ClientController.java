@@ -1,7 +1,6 @@
 package com.example.sep.controller;
 
 import com.example.sep.entity.Client;
-
 import com.example.sep.service.ClientService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

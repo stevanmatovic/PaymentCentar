@@ -1,7 +1,6 @@
 package com.example.sep;
 
 import com.example.sep.entity.Client;
-
 import com.example.sep.repository.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

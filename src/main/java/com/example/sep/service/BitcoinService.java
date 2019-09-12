@@ -1,9 +1,8 @@
 package com.example.sep.service;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import com.example.sep.dto.OrderResponseDTO;
 import com.example.sep.entity.Client;
+import com.example.sep.entity.Payment;
 import com.example.sep.repository.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,8 +14,8 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-import com.example.sep.dto.OrderResponseDTO;
-import com.example.sep.entity.Payment;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class BitcoinService {
@@ -54,7 +53,7 @@ public class BitcoinService {
 
 		ResponseEntity<OrderResponseDTO> response = client.postForEntity("https://api-sandbox.coingate.com/v2/orders",
 				request, OrderResponseDTO.class);
-		
+
 
 		result.put("status", "success");
 		result.put("redirect_url", response.getBody().getPaymentUrl());
