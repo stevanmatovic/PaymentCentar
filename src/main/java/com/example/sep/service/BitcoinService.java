@@ -3,8 +3,6 @@ package com.example.sep.service;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.example.sep.entity.Client;
-import com.example.sep.repository.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -16,7 +14,9 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import com.example.sep.dto.OrderResponseDTO;
+import com.example.sep.entity.Client;
 import com.example.sep.entity.Payment;
+import com.example.sep.repository.ClientRepository;
 
 @Service
 public class BitcoinService {
@@ -36,7 +36,8 @@ public class BitcoinService {
 		HttpHeaders headers = new HttpHeaders();
 
 		Client c = clientRepository.findById(p.getClient().getId()).get();
-
+		p.setClient(c);
+		
 		headers.add("Authorization", "Token " + bitcoinToken);
 
 		String successURL = "https://localhost:443/payment/success/" + p.getId();
@@ -45,8 +46,8 @@ public class BitcoinService {
 
 		map.add("order_id", p.getId());
 		map.add("price_amount", p.getPrice());
-		map.add("price_currency", "USD");
-		map.add("receive_currency", "USD");
+		map.add("price_currency", p.getPriceCurrency());
+		map.add("receive_currency", p.getReceiveCurrency());
 		map.add("success_url", successURL);
 		map.add("cancel_url", cancelURL);
 

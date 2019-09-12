@@ -6,25 +6,46 @@
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+    <script src="scripts/jquery-3.4.1.min.js"></script>
     <script src="scripts/Bitcoin.js"></script>
 </head>
 <body>
 <div>
-  <div class="form-row">
-    <div class="form-group col-md-6">
-      <label for="priceAmount">Price amount</label>
-      <input type="text" class="form-control" id="price" placeholder="Price amount">
-    </div>
-  </div>
-  <div class="form-group col-md-6"">
-    <label for="priceCurrency">Price currency</label>
-    <input type="text" class="form-control" id="priceCurrency" placeholder="Price currency">
-  </div>
-  <div class="form-group col-md-6"">
-    <label for="receiveCurrency">Receive currency</label>
-    <input type="text" class="form-control" id="receiveCurrency" placeholder="Receive currency">
-  </div>
-  <button type="submit" class="btn btn-primary"  onclick="createOrder()">Create order</button>
+	<div class="form-group row">
+		<label for="priceAmount" class="col-sm-2 col-form-label">Price amount</label>
+		<div class="col-sm-10">
+		  <input type="text" class="form-control" id="price" placeholder="price">
+		</div>
+	</div>
+	<div class="form-group col-md-4">
+		<label for="priceCurrency">Price currency</label>
+		<select id="priceCurrency" class="form-control">
+			<option selected>Choose...</option>
+			<option>USD</option>
+			<option>RSD</option>
+			<option>Bitcoin</option>
+		 </select>
+	</div>
+	<div class="form-group col-md-4">
+		<label for="receiveCurrency">Receive currency</label>
+		<select id="receiveCurrency" class="form-control">
+			<option selected>Choose...</option>
+			<option>USD</option>
+			<option>RSD</option>
+			<option>Bitcoin</option>
+		 </select>
+	</div>
+	<div class="form-group col-md-4">
+		<label for="clientId">Client</label>
+		<select id="clientId" class="form-control">
+			<option selected>Choose...</option>
+		 </select>
+	</div>
+	<div class="form-group row">
+		<div class="col-sm-10">
+			<button type="submit" class="btn btn-primary" onclick="createOrder()">Create Order</button>
+		</div>
+	</div>
 </div>
 </body>
 </html>
