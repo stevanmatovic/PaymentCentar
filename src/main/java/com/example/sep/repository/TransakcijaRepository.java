@@ -9,6 +9,6 @@ import com.example.sep.entity.Transakcija;
 
 public interface TransakcijaRepository extends JpaRepository<Transakcija, Long>{
 	
-	List<Transakcija> findByPayment(PaymentStatus paymentStatus);
+	List<Transakcija> findByPaymentStatus(PaymentStatus paymentStatus);
 
 }

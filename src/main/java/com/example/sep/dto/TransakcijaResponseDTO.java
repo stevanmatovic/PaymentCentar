@@ -1,34 +1,27 @@
-package com.example.sep.entity;
+package com.example.sep.dto;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.Date;
 
-import javax.persistence.*;
-
-import com.example.sep.entity.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Entity
+@NoArgsConstructor
 @Data
-public class Transakcija {
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long id;
-	
-    private String pan; //payment card number, primary account number
+public class TransakcijaResponseDTO {
+
+	private String pan; //payment card number, primary account number
     private String securityCode;
     private String cardHolderName;
+    
+    @JsonFormat(pattern="yyyy-MM-dd")
     private Date expirationDate;
 
     private BigDecimal amount;
     private Long issuerOrderId;
-    
-    @Column(nullable = false)
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss.SSS")
     private Timestamp issuerTimestamp;
     private Long bankAcquirer;
     
@@ -38,24 +31,13 @@ public class Transakcija {
     private Timestamp aquirerTimestamp;
     
     private String result;
-    
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "payment_id")
-    private Payment payment;
-    
-    @Enumerated
-	@Column(name = "paid")
-	private PaymentStatus paymentStatus;
-    
-    public Transakcija() {
-
-    }
-    
-    public Transakcija(String pan, String securityCode, String cardHolderName, Date expirationDate) {
+	
+   
+    public TransakcijaResponseDTO(String pan, String securityCode, String cardHolderName, Date expirationDate) {
         this.pan = pan;
         this.securityCode = securityCode;
         this.cardHolderName = cardHolderName;
         this.expirationDate = expirationDate;
     }
-
+	
 }

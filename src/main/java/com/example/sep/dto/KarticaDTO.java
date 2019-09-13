@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class KarticaDTO {
 
-	private Long id;
     private Long id_racuna;
     private Long pan;
     private String card_holder_name;

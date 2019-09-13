@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class KlijentBankeDTO {
 
-	private Long id;
     private String naziv;
     private String adresa;
     private String email;
@@ -16,8 +15,7 @@ public class KlijentBankeDTO {
     private String merchantId;
     private String merchantPassword;
     
-    public KlijentBankeDTO(Long id, String naziv, String adresa, String email, String telefon, String tipKlijenta) {
-        this.id = id;
+    public KlijentBankeDTO(String naziv, String adresa, String email, String telefon, String tipKlijenta) {
         this.naziv = naziv;
         this.adresa = adresa;
         this.email = email;

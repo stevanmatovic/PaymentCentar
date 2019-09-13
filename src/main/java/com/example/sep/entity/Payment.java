@@ -22,7 +22,7 @@ public class Payment {
   @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "client_id")
   private Client client;
-
+  
   private String paymentType;
 
   private boolean failed = false;
@@ -34,6 +34,8 @@ public class Payment {
   private String successURI;
 
   private String failureURI;
+  
+  private String errorURL;
   
   private String status;
   

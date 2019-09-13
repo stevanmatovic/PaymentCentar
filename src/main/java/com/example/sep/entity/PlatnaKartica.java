@@ -29,5 +29,13 @@ public class PlatnaKartica {
     @Column(nullable = true)
     private Date expirationDate;
     
+    public PlatnaKartica(Racun racun, String PAN, String securityCode, String cardHolderName, Date expirationDate) {
+        this.racun = racun;
+        this.pan = PAN;
+        this.securityCode = securityCode;
+        this.cardHolderName = cardHolderName;
+        this.expirationDate = expirationDate;
+    }
+    
     
 }

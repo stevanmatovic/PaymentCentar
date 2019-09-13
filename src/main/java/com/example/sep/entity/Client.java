@@ -1,5 +1,7 @@
 package com.example.sep.entity;
 
+import java.sql.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -24,7 +26,7 @@ public class Client {
   @NotNull
   @Column(nullable = false, length = 50)
   private String title;
-
+ 
   //PayPal fields
   @Column(nullable = true)
   private String merchantId;
@@ -34,4 +36,21 @@ public class Client {
 
   @Column(nullable = true)
   private String clientSecret;
+  
+  @Column(nullable = true)
+  private String merchantPassword;
+  
+  @Column(nullable = true)
+  private Long merchantOrderId;
+
+  @Column(nullable = true)
+  private Date merchantTimestamp;
+  
+  public Client(Long id, String title, String merchantId, String clientId, String clientSecret) {
+	  this.id = id;
+	  this.title = title;
+	  this.merchantId = merchantId;
+	  this.clientId = clientId;
+	  this.clientSecret = clientSecret;
+  }
 }
