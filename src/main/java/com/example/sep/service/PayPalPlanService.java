@@ -1,12 +1,10 @@
 package com.example.sep.service;
 
 import com.example.sep.entity.Client;
-
 import com.example.sep.entity.PayPalPlan;
 import com.example.sep.repository.ClientRepository;
 import com.example.sep.repository.PayPalPlanRepository;
 import com.paypal.api.payments.*;
-import com.paypal.api.payments.Currency;
 import com.paypal.base.rest.APIContext;
 import com.paypal.base.rest.PayPalRESTException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +14,10 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class PayPalPlanService {
@@ -77,8 +78,8 @@ public class PayPalPlanService {
     // Merchant_preferences
     MerchantPreferences merchantPreferences = new MerchantPreferences();
     merchantPreferences.setSetupFee(currency);
-    merchantPreferences.setCancelUrl(payPalPlan.getPlanCancelUrl());
-    merchantPreferences.setReturnUrl(payPalPlan.getPlanReturnUrl());
+    merchantPreferences.setCancelUrl("https://localhost:443/subscription/fail");
+    merchantPreferences.setReturnUrl("https://localhost:443/subscription/success");
     merchantPreferences.setMaxFailAttempts("0");
     merchantPreferences.setAutoBillAmount("YES");
     merchantPreferences.setInitialFailAmountAction("CONTINUE");
@@ -123,8 +124,8 @@ public class PayPalPlanService {
   public Map<String, Object> completeAgreement(PayPalPlan payPalPlan) {
     Map<String, Object> response = new HashMap<String,Object> ();
     Agreement agreement = new Agreement();
-    agreement.setName("Base Agreement");
-    agreement.setDescription("Basic Agreement");
+    agreement.setName("Base AgreementDetails");
+    agreement.setDescription("Basic AgreementDetails");
     agreement.setStartDate("2019-10-1T0:06:24Z");
 
     // Set plan ID
@@ -140,8 +141,8 @@ public class PayPalPlanService {
     try {
       APIContext context = new APIContext(clientId, clientSecret, "sandbox");
       agreement = agreement.create(context);
-      System.out.println("Agreement ID "+agreement.getId());
-      System.out.println("Agreement ID "+agreement.getState());
+      System.out.println("AgreementDetails ID "+agreement.getId());
+      System.out.println("AgreementDetails ID "+agreement.getState());
 
       String redirectUrl = "";
       for (Links links : agreement.getLinks()) {
@@ -162,22 +163,19 @@ public class PayPalPlanService {
     return response;
   }
 
-  public Map<String,Object> executeAgreement(HttpServletRequest request) {
+  public Agreement executeAgreement(HttpServletRequest request) {
     Map<String, Object> response = new HashMap<String,Object> ();
     Agreement agreement = new Agreement();
+
     APIContext context = new APIContext(client.getClientId(), client.getClientSecret(), "sandbox");
     try {
       Agreement createdAgreement = agreement.execute(context, request.getParameter("token"));
-      if(createdAgreement != null ) {
-        System.out.println(createdAgreement.getPlan().getMerchantPreferences().getReturnUrl());
-        response.put("state", createdAgreement.getState());
-      }
+      return createdAgreement;
     } catch (PayPalRESTException e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
 
-    return response;
+    return null;
   }
 
   public Client getClient() {
@@ -187,4 +185,19 @@ public class PayPalPlanService {
   public void setClient(Client client) {
     this.client = client;
   }
+
+  public AgreementDetails agreementStatus(String id) {
+
+    APIContext context = new APIContext(client.getClientId(), client.getClientSecret(), "sandbox");
+    Agreement agreement;
+    try {
+      agreement = Agreement.get(context,id);
+      return agreement.getAgreementDetails();
+    } catch (PayPalRESTException e) {
+      e.printStackTrace();
+    }
+    return null;
+
+  }
+
 }

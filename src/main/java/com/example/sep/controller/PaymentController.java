@@ -31,6 +31,7 @@ import org.springframework.web.client.RestTemplate;
 import com.example.sep.convertor.TransakcijaDTOToObject;
 import com.example.sep.convertor.TransakcijaResponseDTOtoObject;
 import com.example.sep.dto.CardDTO;
+
 import com.example.sep.dto.OrderLocalDTO;
 import com.example.sep.dto.PaymentDTO;
 import com.example.sep.dto.TransakcijaDTO;
@@ -50,9 +51,18 @@ import com.example.sep.service.ClientService;
 import com.example.sep.service.KlijentBankeService;
 import com.example.sep.service.PayPalService;
 import com.example.sep.service.PaymentService;
+
 import com.example.sep.service.PlatnaKarticaService;
 import com.example.sep.service.RacunService;
 import com.example.sep.service.TransakcijaService;
+
+
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.Map;
 
 
 @RestController
@@ -66,6 +76,7 @@ public class PaymentController {
   private PayPalService payPalService;
   @Autowired
   private BitcoinService bitcoinService;
+
   
   @Autowired
   private RacunService racunService;
@@ -93,6 +104,7 @@ public class PaymentController {
   
   Encryptor encryptor;
   
+
   public PaymentController(PaymentService paymentService, PayPalService payPalService) {
     this.paymentService = paymentService;
     this.payPalService = payPalService;
@@ -110,17 +122,17 @@ public class PaymentController {
 	  
     p = paymentService.save(p);
     Map<String, Object> result;
-    switch (paymentDTO.getPaymentType()){
+    switch (paymentDTO.getPaymentType()) {
       case "PayPal":
-    	  result = payPalService.createPayment(p);
+        result = payPalService.createPayment(p);
         return "redirect:" + result.get("redirect_url");
       case "Card":
     	  Banka b = bankaService.get();
     	  return "redirect: " + b.getUrl() + "/payment/paymentPage/" + p.getId();
       case "Bitcoin":
-    	  result = bitcoinService.createPayment(p);
-    	  paymentService.save((Payment)result.get("payment"));
-          return "redirect:" + result.get("redirect_url");
+        result = bitcoinService.createPayment(p);
+        paymentService.save((Payment) result.get("payment"));
+        return "redirect:" + result.get("redirect_url");
     }
     return "error";
   }
@@ -281,17 +293,16 @@ public class PaymentController {
 	}
 
   @GetMapping(value = "success/{id}")
-  public void success(@PathVariable Long id){
+  public void success(@PathVariable Long id) {
     Payment p = paymentService.getByID(id);
     p.setFinished(true);
     RestTemplate restTemplate = new RestTemplate();
     String result = restTemplate.getForObject(p.getSuccessURI(), String.class);
     System.out.println(result);
   }
-  
 
   @GetMapping(value = "failure/{id}")
-  public void failure(@PathVariable Long id){
+  public void failure(@PathVariable Long id) {
     Payment p = paymentService.getByID(id);
     p.setFinished(true);
     p.setFailed(true);
@@ -299,15 +310,14 @@ public class PaymentController {
     String result = restTemplate.getForObject(p.getSuccessURI(), String.class);
     System.out.println(result);
   }
-  
-	@PostMapping("/updateOrder")
-	public void updateOrder(@RequestBody OrderLocalDTO orderLocalDTO) {
-		Payment payment = paymentService.getByID(orderLocalDTO.getOrderId());
-		payment.setStatus(orderLocalDTO.getStatus());
 
-		paymentService.save(payment);
-	}
+  @PostMapping("/updateOrder")
+  public void updateOrder(@RequestBody OrderLocalDTO orderLocalDTO) {
+    Payment payment = paymentService.getByID(orderLocalDTO.getOrderId());
+    payment.setStatus(orderLocalDTO.getStatus());
 
+    paymentService.save(payment);
+  }
 
 	
 	private void transferMoneyToMerchant(Racun racun, BigDecimal amount) {

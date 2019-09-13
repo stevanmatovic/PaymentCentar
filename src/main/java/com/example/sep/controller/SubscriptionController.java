@@ -3,15 +3,14 @@ package com.example.sep.controller;
 import com.example.sep.entity.PayPalPlan;
 import com.example.sep.service.PayPalPlanService;
 import com.paypal.api.payments.Agreement;
+import com.paypal.api.payments.AgreementDetails;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,9 +26,9 @@ public class SubscriptionController {
     return payPalPlanService.save(plan);
   }
 
-  @GetMapping(value = "/acceptPlan/{id}")
-  public ResponseEntity<?> acceptPlan(@PathVariable("id") String paypalId) {
-    PayPalPlan payPalPlan = payPalPlanService.findByPayPalId(paypalId);
+  @PostMapping(value = "/acceptPlan/{id}")
+  public ResponseEntity<?> acceptPlan(@PathVariable String id) {
+    PayPalPlan payPalPlan = payPalPlanService.findByPayPalId(id);
     Map<String, Object> response = new HashMap<String, Object>();
     if (payPalPlan != null) {
       response = payPalPlanService.completeAgreement(payPalPlan);
@@ -38,18 +37,30 @@ public class SubscriptionController {
   }
 
   @GetMapping(value ="/success")
-  public ResponseEntity<?> executeAgreement(HttpServletRequest request){
-    Map<String,Object> response = payPalPlanService.executeAgreement(request);
-    URI index = null;
-    try {
-      index = new URI("https://localhost:443");
-    } catch (URISyntaxException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+  public String executeAgreement(HttpServletRequest request){
+    Agreement executedAgreement = payPalPlanService.executeAgreement(request);
+    PayPalPlan plan = payPalPlanService.findByPayPalId(executedAgreement.getPlan().getId());
+
+    RestTemplate restTemplate = new RestTemplate();
+
+    if (executedAgreement != null){
+
+//      HttpHeaders headers = new HttpHeaders();
+//      headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+//
+//      MultiValueMap<String, String> map= new LinkedMultiValueMap<String, String>();
+//      map.add("agreementId", executedAgreement.getId());
+//      map.add("payerEmail", executedAgreement.getPayer().getPayerInfo().getEmail());
+//      map.add("payee", plan.getClient().getTitle());
+//
+//      HttpEntity<MultiValueMap<String, String>> req = new HttpEntity<>(map, headers);
+//      ResponseEntity<String> response = restTemplate.postForEntity( plan.getPlanReturnUrl(), req,String.class);
+      return executedAgreement.getPayer().getPayerInfo().getEmail() + " successfully subscribed, agreementId: " + executedAgreement.getId();
+    }else{
+
+      return "failed subscription";
     }
-    HttpHeaders httpHeaders = new HttpHeaders();
-    httpHeaders.setLocation(index);
-    return new ResponseEntity<>(httpHeaders, HttpStatus.SEE_OTHER);
+
   }
 
 
@@ -57,4 +68,12 @@ public class SubscriptionController {
   public String failure() {
     return "fail";
   }
+
+
+  @GetMapping(value = "/agreement/{id}/status")
+  public AgreementDetails getDetails(@PathVariable String id){
+    return payPalPlanService.agreementStatus(id);
+  }
+
+
 }

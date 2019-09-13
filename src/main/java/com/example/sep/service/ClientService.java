@@ -1,10 +1,12 @@
 package com.example.sep.service;
 
-import com.example.sep.entity.Client;
+import java.util.List;
 
-import com.example.sep.repository.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.example.sep.entity.Client;
+import com.example.sep.repository.ClientRepository;
 
 
 @Service
@@ -15,6 +17,10 @@ public class ClientService {
 
   public Long save(Client c){
     return clientRepository.save(c).getId();
+  }
+  
+  public List<Client> getClients() {
+	  return clientRepository.findAll();
   }
 
 }

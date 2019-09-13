@@ -1,3 +1,4 @@
+
 package com.example.sep.entity;
 
 import javax.persistence.Entity;
@@ -44,3 +45,5 @@ public class Payment {
   private String receiveCurrency;
 
 }
+
+
